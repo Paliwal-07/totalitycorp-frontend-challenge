@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useCartContext } from "./context/cart_context";
 import CartItem from "./components/CartItem";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Button } from "./styles/Button";
 import FormatPrice from "./helpers/FormatPrice";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -10,7 +10,8 @@ const Cart = () => {
   const { cart, clearCart, total_price, shipping_fee } = useCartContext();
   // console.log("🚀 ~ file: Cart.js ~ line 6 ~ Cart ~ cart", cart);
 
-  const { isAuthenticated, user } = useAuth0();
+  const { isAuthenticated, user,loginWithRedirect } = useAuth0();
+  const navigate = useNavigate();
 
   if (cart.length === 0) {
     return (
@@ -75,6 +76,10 @@ const Cart = () => {
                 <FormatPrice price={shipping_fee + total_price} />
               </p>
             </div>
+            <Button onClick={() => {
+              if (!isAuthenticated)
+                loginWithRedirect()
+            }}>Proceed to Checkout</Button>
           </div>
         </div>
       </div>
